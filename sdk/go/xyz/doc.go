@@ -1,2 +1,2 @@
-// Package xyz exports types, functions, subpackages for provisioning xyz resources.
-package xyz
+// Package foo exports types, functions, subpackages for provisioning foo resources.
+package foo
