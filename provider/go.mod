@@ -1,9 +1,8 @@
-module github.com/mmartyn/pulumi-foo
+module github.com/mmartyn/pulumi-foo/provider
 
 go 1.21
 
 require (
-	github.com/mmartyn/pulumi-foo/provider v0.0.0-20231030224613-a4ffe910e886
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.7.0
 	github.com/pulumi/pulumi-go-provider v0.13.0
 	github.com/pulumi/pulumi/sdk/v3 v3.91.1

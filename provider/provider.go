@@ -15,12 +15,13 @@
 package provider
 
 import (
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 
 	"github.com/pulumi/pulumi-go-provider/middleware/schema"
+
+	"github.com/mmartyn/pulumi-foo/provider/pkg/bar"
+	"github.com/mmartyn/pulumi-foo/provider/pkg/baz"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
@@ -33,8 +34,8 @@ func Provider() p.Provider {
 	// In this case, a single custom resource.
 	return infer.Provider(infer.Options{
 		Components: []infer.InferredComponent{
-			infer.Component[*Bar, BarArgs, *BarState](),
-			infer.Component[*Baz, BazArgs, *BazState](),
+			infer.Component[*bar.Bar, bar.BarArgs, *bar.BarState](),
+			infer.Component[*baz.Baz, baz.BazArgs, *baz.BazState](),
 		},
 		Metadata: schema.Metadata{
 			LanguageMap: map[string]any{
@@ -61,68 +62,4 @@ func Provider() p.Provider {
 			},
 		},
 	})
-}
-
-type Bar struct{}
-type BarArgs struct {
-	BucketName string `pulumi:"bucketName"`
-}
-
-type BarState struct {
-	pulumi.ResourceState
-	BarArgs
-	// Outputs
-	Bucket s3.BucketOutput `pulumi:"bucket" provider:"type=aws@6.1.0:s3%2Fbucket:Bucket"`
-}
-
-func (i *Bar) Construct(ctx *pulumi.Context, name, typ string, args BarArgs, opts pulumi.ResourceOption) (*BarState, error) {
-	comp := &BarState{BarArgs: args}
-	err := ctx.RegisterComponentResource(typ, name, comp, opts)
-	if err != nil {
-		return nil, err
-	}
-
-	// ---- Bucket
-	bucket, err := s3.NewBucket(ctx, name, &s3.BucketArgs{
-		Bucket: pulumi.String(args.BucketName),
-	}, pulumi.Parent(comp))
-	if err != nil {
-		return nil, err
-	}
-
-	comp.Bucket = bucket.ToBucketOutput()
-
-	return comp, nil
-}
-
-type Baz struct{}
-type BazArgs struct {
-	Bucket s3.BucketInput `pulumi:"bucket" provider:"type=aws@6.1.0:s3%2Fbucket:Bucket"`
-}
-
-type BazState struct {
-	pulumi.ResourceState
-	BazArgs
-	// Outputs
-	BucketTwo s3.BucketOutput `pulumi:"bucketTwo" provider:"type=aws@6.1.0:s3%2Fbucket:Bucket"`
-}
-
-func (i *Baz) Construct(ctx *pulumi.Context, name, typ string, args BazArgs, opts pulumi.ResourceOption) (*BazState, error) {
-	comp := &BazState{BazArgs: args}
-	err := ctx.RegisterComponentResource(typ, name, comp, opts)
-	if err != nil {
-		return nil, err
-	}
-
-	// ---- Bucket Two
-	bucket, err := s3.NewBucket(ctx, name, &s3.BucketArgs{
-		Bucket: pulumi.Sprintf("%s-%s", args.Bucket.ToBucketOutput().Bucket(), "two"),
-	}, pulumi.Parent(comp))
-	if err != nil {
-		return nil, err
-	}
-
-	comp.BucketTwo = bucket.ToBucketOutput()
-
-	return comp, nil
 }

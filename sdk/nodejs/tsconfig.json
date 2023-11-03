@@ -13,9 +13,12 @@
         "strict": true
     },
     "files": [
+        "bar/bar.ts",
+        "bar/index.ts",
+        "baz/baz.ts",
+        "baz/index.ts",
         "index.ts",
         "provider.ts",
-        "random.ts",
         "utilities.ts"
     ]
 }

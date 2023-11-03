@@ -8,6 +8,6 @@
         "@pulumi/aws": "^6.0.0",
         "@pulumi/awsx": "^1.0.0",
         "@pulumi/pulumi": "^3.0.0",
-        "@pulumi/foo": "v0.0.1-alpha.1698705973+a4ffe910.dirty"
+        "@pulumi/foo": "link:../../sdk/nodejs/bin"
     }
 }

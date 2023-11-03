@@ -6,16 +6,34 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .provider import *
-from .random import *
+
+# Make subpackages available:
+if typing.TYPE_CHECKING:
+    import pulumi_foo.bar as __bar
+    bar = __bar
+    import pulumi_foo.baz as __baz
+    baz = __baz
+else:
+    bar = _utilities.lazy_import('pulumi_foo.bar')
+    baz = _utilities.lazy_import('pulumi_foo.baz')
+
 _utilities.register(
     resource_modules="""
 [
  {
   "pkg": "foo",
-  "mod": "index",
-  "fqn": "pulumi_foo",
+  "mod": "bar",
+  "fqn": "pulumi_foo.bar",
   "classes": {
-   "foo:index:Random": "Random"
+   "foo:bar:Bar": "Bar"
+  }
+ },
+ {
+  "pkg": "foo",
+  "mod": "baz",
+  "fqn": "pulumi_foo.baz",
+  "classes": {
+   "foo:baz:Baz": "Baz"
   }
  }
 ]
