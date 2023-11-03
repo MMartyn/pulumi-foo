@@ -1,5 +1,8 @@
 import * as foo from "@pulumi/foo";
 
-const random = new foo.Random("my-random", { length: 24 });
+const random = new foo.Random("random", {
+    length: 10,
+});
+
 
 export const output = random.result;
