@@ -1,0 +1,12 @@
+name: optional
+runtime: yaml
+description: A simple optional example
+resources:
+  bar:
+    type: foo:bar:Bar
+    properties:
+      bucketName: bar-bucket
+      nestedObjs:
+      - reqProp: "bar"
+        optProp: 
+        - "buzz"

@@ -18,6 +18,9 @@ namespace Pulumi.Foo.Bar
         [Output("bucketName")]
         public Output<string> BucketName { get; private set; } = null!;
 
+        [Output("nestedObjs")]
+        public Output<ImmutableArray<Outputs.NestedObject>> NestedObjs { get; private set; } = null!;
+
 
         /// <summary>
         /// Create a Bar resource with the given unique name, arguments, and options.
@@ -48,6 +51,14 @@ namespace Pulumi.Foo.Bar
     {
         [Input("bucketName", required: true)]
         public string BucketName { get; set; } = null!;
+
+        [Input("nestedObjs", required: true)]
+        private InputList<Inputs.NestedObjectArgs>? _nestedObjs;
+        public InputList<Inputs.NestedObjectArgs> NestedObjs
+        {
+            get => _nestedObjs ?? (_nestedObjs = new InputList<Inputs.NestedObjectArgs>());
+            set => _nestedObjs = value;
+        }
 
         public BarArgs()
         {

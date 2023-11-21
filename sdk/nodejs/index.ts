@@ -14,10 +14,12 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 // Export sub-modules:
 import * as bar from "./bar";
 import * as baz from "./baz";
+import * as types from "./types";
 
 export {
     bar,
     baz,
+    types,
 };
 pulumi.runtime.registerResourcePackage("foo", {
     version: utilities.getVersion(),

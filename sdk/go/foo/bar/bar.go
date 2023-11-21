@@ -11,14 +11,14 @@ import (
 	"github.com/mmartyn/pulumi-foo/sdk/go/foo/internal"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 type Bar struct {
 	pulumi.ResourceState
 
-	Bucket     s3.BucketOutput     `pulumi:"bucket"`
-	BucketName pulumi.StringOutput `pulumi:"bucketName"`
+	Bucket     s3.BucketOutput         `pulumi:"bucket"`
+	BucketName pulumi.StringOutput     `pulumi:"bucketName"`
+	NestedObjs NestedObjectArrayOutput `pulumi:"nestedObjs"`
 }
 
 // NewBar registers a new resource with the given unique name, arguments, and options.
@@ -31,6 +31,9 @@ func NewBar(ctx *pulumi.Context,
 	if args.BucketName == nil {
 		return nil, errors.New("invalid value for required argument 'BucketName'")
 	}
+	if args.NestedObjs == nil {
+		return nil, errors.New("invalid value for required argument 'NestedObjs'")
+	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Bar
 	err := ctx.RegisterRemoteComponentResource("foo:bar:Bar", name, args, &resource, opts...)
@@ -41,12 +44,14 @@ func NewBar(ctx *pulumi.Context,
 }
 
 type barArgs struct {
-	BucketName string `pulumi:"bucketName"`
+	BucketName string         `pulumi:"bucketName"`
+	NestedObjs []NestedObject `pulumi:"nestedObjs"`
 }
 
 // The set of arguments for constructing a Bar resource.
 type BarArgs struct {
 	BucketName pulumi.StringInput
+	NestedObjs NestedObjectArrayInput
 }
 
 func (BarArgs) ElementType() reflect.Type {
@@ -70,12 +75,6 @@ func (i *Bar) ToBarOutput() BarOutput {
 
 func (i *Bar) ToBarOutputWithContext(ctx context.Context) BarOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(BarOutput)
-}
-
-func (i *Bar) ToOutput(ctx context.Context) pulumix.Output[*Bar] {
-	return pulumix.Output[*Bar]{
-		OutputState: i.ToBarOutputWithContext(ctx).OutputState,
-	}
 }
 
 // BarArrayInput is an input type that accepts BarArray and BarArrayOutput values.
@@ -103,12 +102,6 @@ func (i BarArray) ToBarArrayOutputWithContext(ctx context.Context) BarArrayOutpu
 	return pulumi.ToOutputWithContext(ctx, i).(BarArrayOutput)
 }
 
-func (i BarArray) ToOutput(ctx context.Context) pulumix.Output[[]*Bar] {
-	return pulumix.Output[[]*Bar]{
-		OutputState: i.ToBarArrayOutputWithContext(ctx).OutputState,
-	}
-}
-
 // BarMapInput is an input type that accepts BarMap and BarMapOutput values.
 // You can construct a concrete instance of `BarMapInput` via:
 //
@@ -134,12 +127,6 @@ func (i BarMap) ToBarMapOutputWithContext(ctx context.Context) BarMapOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(BarMapOutput)
 }
 
-func (i BarMap) ToOutput(ctx context.Context) pulumix.Output[map[string]*Bar] {
-	return pulumix.Output[map[string]*Bar]{
-		OutputState: i.ToBarMapOutputWithContext(ctx).OutputState,
-	}
-}
-
 type BarOutput struct{ *pulumi.OutputState }
 
 func (BarOutput) ElementType() reflect.Type {
@@ -154,18 +141,16 @@ func (o BarOutput) ToBarOutputWithContext(ctx context.Context) BarOutput {
 	return o
 }
 
-func (o BarOutput) ToOutput(ctx context.Context) pulumix.Output[*Bar] {
-	return pulumix.Output[*Bar]{
-		OutputState: o.OutputState,
-	}
-}
-
 func (o BarOutput) Bucket() s3.BucketOutput {
 	return o.ApplyT(func(v *Bar) s3.BucketOutput { return v.Bucket }).(s3.BucketOutput)
 }
 
 func (o BarOutput) BucketName() pulumi.StringOutput {
 	return o.ApplyT(func(v *Bar) pulumi.StringOutput { return v.BucketName }).(pulumi.StringOutput)
+}
+
+func (o BarOutput) NestedObjs() NestedObjectArrayOutput {
+	return o.ApplyT(func(v *Bar) NestedObjectArrayOutput { return v.NestedObjs }).(NestedObjectArrayOutput)
 }
 
 type BarArrayOutput struct{ *pulumi.OutputState }
@@ -180,12 +165,6 @@ func (o BarArrayOutput) ToBarArrayOutput() BarArrayOutput {
 
 func (o BarArrayOutput) ToBarArrayOutputWithContext(ctx context.Context) BarArrayOutput {
 	return o
-}
-
-func (o BarArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]*Bar] {
-	return pulumix.Output[[]*Bar]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o BarArrayOutput) Index(i pulumi.IntInput) BarOutput {
@@ -206,12 +185,6 @@ func (o BarMapOutput) ToBarMapOutput() BarMapOutput {
 
 func (o BarMapOutput) ToBarMapOutputWithContext(ctx context.Context) BarMapOutput {
 	return o
-}
-
-func (o BarMapOutput) ToOutput(ctx context.Context) pulumix.Output[map[string]*Bar] {
-	return pulumix.Output[map[string]*Bar]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o BarMapOutput) MapIndex(k pulumi.StringInput) BarOutput {

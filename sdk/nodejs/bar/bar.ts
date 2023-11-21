@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "../types/input";
+import * as outputs from "../types/output";
 import * as utilities from "../utilities";
 
 import * as pulumiAws from "@pulumi/aws";
@@ -23,6 +25,7 @@ export class Bar extends pulumi.ComponentResource {
 
     public /*out*/ readonly bucket!: pulumi.Output<pulumiAws.s3.Bucket>;
     public readonly bucketName!: pulumi.Output<string>;
+    public readonly nestedObjs!: pulumi.Output<outputs.bar.NestedObject[]>;
 
     /**
      * Create a Bar resource with the given unique name, arguments, and options.
@@ -38,11 +41,16 @@ export class Bar extends pulumi.ComponentResource {
             if ((!args || args.bucketName === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'bucketName'");
             }
+            if ((!args || args.nestedObjs === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'nestedObjs'");
+            }
             resourceInputs["bucketName"] = args ? args.bucketName : undefined;
+            resourceInputs["nestedObjs"] = args ? args.nestedObjs : undefined;
             resourceInputs["bucket"] = undefined /*out*/;
         } else {
             resourceInputs["bucket"] = undefined /*out*/;
             resourceInputs["bucketName"] = undefined /*out*/;
+            resourceInputs["nestedObjs"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Bar.__pulumiType, name, resourceInputs, opts, true /*remote*/);
@@ -54,4 +62,5 @@ export class Bar extends pulumi.ComponentResource {
  */
 export interface BarArgs {
     bucketName: pulumi.Input<string>;
+    nestedObjs: pulumi.Input<pulumi.Input<inputs.bar.NestedObjectArgs>[]>;
 }

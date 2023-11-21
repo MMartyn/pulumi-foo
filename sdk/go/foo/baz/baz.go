@@ -11,7 +11,6 @@ import (
 	"github.com/mmartyn/pulumi-foo/sdk/go/foo/internal"
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
 type Baz struct {
@@ -72,12 +71,6 @@ func (i *Baz) ToBazOutputWithContext(ctx context.Context) BazOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(BazOutput)
 }
 
-func (i *Baz) ToOutput(ctx context.Context) pulumix.Output[*Baz] {
-	return pulumix.Output[*Baz]{
-		OutputState: i.ToBazOutputWithContext(ctx).OutputState,
-	}
-}
-
 // BazArrayInput is an input type that accepts BazArray and BazArrayOutput values.
 // You can construct a concrete instance of `BazArrayInput` via:
 //
@@ -101,12 +94,6 @@ func (i BazArray) ToBazArrayOutput() BazArrayOutput {
 
 func (i BazArray) ToBazArrayOutputWithContext(ctx context.Context) BazArrayOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(BazArrayOutput)
-}
-
-func (i BazArray) ToOutput(ctx context.Context) pulumix.Output[[]*Baz] {
-	return pulumix.Output[[]*Baz]{
-		OutputState: i.ToBazArrayOutputWithContext(ctx).OutputState,
-	}
 }
 
 // BazMapInput is an input type that accepts BazMap and BazMapOutput values.
@@ -134,12 +121,6 @@ func (i BazMap) ToBazMapOutputWithContext(ctx context.Context) BazMapOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(BazMapOutput)
 }
 
-func (i BazMap) ToOutput(ctx context.Context) pulumix.Output[map[string]*Baz] {
-	return pulumix.Output[map[string]*Baz]{
-		OutputState: i.ToBazMapOutputWithContext(ctx).OutputState,
-	}
-}
-
 type BazOutput struct{ *pulumi.OutputState }
 
 func (BazOutput) ElementType() reflect.Type {
@@ -152,12 +133,6 @@ func (o BazOutput) ToBazOutput() BazOutput {
 
 func (o BazOutput) ToBazOutputWithContext(ctx context.Context) BazOutput {
 	return o
-}
-
-func (o BazOutput) ToOutput(ctx context.Context) pulumix.Output[*Baz] {
-	return pulumix.Output[*Baz]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o BazOutput) Bucket() s3.BucketOutput {
@@ -182,12 +157,6 @@ func (o BazArrayOutput) ToBazArrayOutputWithContext(ctx context.Context) BazArra
 	return o
 }
 
-func (o BazArrayOutput) ToOutput(ctx context.Context) pulumix.Output[[]*Baz] {
-	return pulumix.Output[[]*Baz]{
-		OutputState: o.OutputState,
-	}
-}
-
 func (o BazArrayOutput) Index(i pulumi.IntInput) BazOutput {
 	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *Baz {
 		return vs[0].([]*Baz)[vs[1].(int)]
@@ -206,12 +175,6 @@ func (o BazMapOutput) ToBazMapOutput() BazMapOutput {
 
 func (o BazMapOutput) ToBazMapOutputWithContext(ctx context.Context) BazMapOutput {
 	return o
-}
-
-func (o BazMapOutput) ToOutput(ctx context.Context) pulumix.Output[map[string]*Baz] {
-	return pulumix.Output[map[string]*Baz]{
-		OutputState: o.OutputState,
-	}
 }
 
 func (o BazMapOutput) MapIndex(k pulumi.StringInput) BazOutput {

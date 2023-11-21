@@ -1,13 +1,21 @@
 package bar
 
 import (
+	"fmt"
+
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+type NestedObject struct {
+	ReqProp string   `pulumi:"reqProp"`
+	OptProp []string `pulumi:"optProp,optional"`
+}
+
 type Bar struct{}
 type BarArgs struct {
-	BucketName string `pulumi:"bucketName"`
+	BucketName string         `pulumi:"bucketName"`
+	NestedObjs []NestedObject `pulumi:"nestedObjs"`
 }
 
 type BarState struct {
@@ -22,6 +30,11 @@ func (i *Bar) Construct(ctx *pulumi.Context, name, typ string, args BarArgs, opt
 	err := ctx.RegisterComponentResource(typ, name, comp, opts)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, nestedObj := range args.NestedObjs {
+		fmt.Println("ReqProp:", nestedObj.ReqProp)
+		fmt.Println("OptProp:", nestedObj.OptProp)
 	}
 
 	// ---- Bucket

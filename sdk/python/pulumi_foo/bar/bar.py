@@ -8,6 +8,8 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
+from . import outputs
+from ._inputs import *
 import pulumi_aws
 
 __all__ = ['BarArgs', 'Bar']
@@ -15,11 +17,13 @@ __all__ = ['BarArgs', 'Bar']
 @pulumi.input_type
 class BarArgs:
     def __init__(__self__, *,
-                 bucket_name: pulumi.Input[str]):
+                 bucket_name: pulumi.Input[str],
+                 nested_objs: pulumi.Input[Sequence[pulumi.Input['NestedObjectArgs']]]):
         """
         The set of arguments for constructing a Bar resource.
         """
         pulumi.set(__self__, "bucket_name", bucket_name)
+        pulumi.set(__self__, "nested_objs", nested_objs)
 
     @property
     @pulumi.getter(name="bucketName")
@@ -30,6 +34,15 @@ class BarArgs:
     def bucket_name(self, value: pulumi.Input[str]):
         pulumi.set(self, "bucket_name", value)
 
+    @property
+    @pulumi.getter(name="nestedObjs")
+    def nested_objs(self) -> pulumi.Input[Sequence[pulumi.Input['NestedObjectArgs']]]:
+        return pulumi.get(self, "nested_objs")
+
+    @nested_objs.setter
+    def nested_objs(self, value: pulumi.Input[Sequence[pulumi.Input['NestedObjectArgs']]]):
+        pulumi.set(self, "nested_objs", value)
+
 
 class Bar(pulumi.ComponentResource):
     @overload
@@ -37,6 +50,7 @@ class Bar(pulumi.ComponentResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  bucket_name: Optional[pulumi.Input[str]] = None,
+                 nested_objs: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['NestedObjectArgs']]]]] = None,
                  __props__=None):
         """
         Create a Bar resource with the given unique name, props, and options.
@@ -67,6 +81,7 @@ class Bar(pulumi.ComponentResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  bucket_name: Optional[pulumi.Input[str]] = None,
+                 nested_objs: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['NestedObjectArgs']]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -81,6 +96,9 @@ class Bar(pulumi.ComponentResource):
             if bucket_name is None and not opts.urn:
                 raise TypeError("Missing required property 'bucket_name'")
             __props__.__dict__["bucket_name"] = bucket_name
+            if nested_objs is None and not opts.urn:
+                raise TypeError("Missing required property 'nested_objs'")
+            __props__.__dict__["nested_objs"] = nested_objs
             __props__.__dict__["bucket"] = None
         super(Bar, __self__).__init__(
             'foo:bar:Bar',
@@ -98,4 +116,9 @@ class Bar(pulumi.ComponentResource):
     @pulumi.getter(name="bucketName")
     def bucket_name(self) -> pulumi.Output[str]:
         return pulumi.get(self, "bucket_name")
+
+    @property
+    @pulumi.getter(name="nestedObjs")
+    def nested_objs(self) -> pulumi.Output[Sequence['outputs.NestedObject']]:
+        return pulumi.get(self, "nested_objs")
 
